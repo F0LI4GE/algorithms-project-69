@@ -19,3 +19,24 @@ export default (documents, phrase) => {
 
   return Object.entries(ranks).sort((e1, e2) => e2[1] - e1[1]).map((entry) => entry[0]);
 };
+
+export const invertIndex = (documents) => {
+  const index = {};
+
+  for (let i = 0; i < documents.length; i += 1) {
+    const doc = documents[i];
+    const words = doc.text.match(/\w+/g);
+
+    for (let j = 0; j < words.length; j += 1) {
+      const word = words[j];
+
+      if (!index[word]) {
+        index[word] = [doc.id];
+      } else if (!index[word].includes(doc.id)) {
+        index[word].push(doc.id);
+      }
+    }
+  }
+
+  return index;
+};
