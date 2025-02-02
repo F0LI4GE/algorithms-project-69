@@ -8,4 +8,6 @@ const docs = [doc1, doc2, doc3];
 test('search', () => {
   expect(search(docs, 'shoot')).toStrictEqual(['doc1', 'doc2']);
   expect(search(docs, 'DOESNOTEXIST')).toStrictEqual([]);
+  expect(search(docs, 'pint!')).toStrictEqual(['doc1']);
+  expect(search(docs, 'pint')).toStrictEqual(['doc1']);
 });
