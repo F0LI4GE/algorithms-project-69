@@ -12,4 +12,5 @@ test('search', () => {
   expect(search(docs, 'DOESNOTEXIST')).toStrictEqual([]);
   expect(search(docs, 'pint!')).toStrictEqual(['doc1']);
   expect(search(docs, 'pint')).toStrictEqual(['doc1']);
+  expect(search(docs, 'shoot at me')).toStrictEqual(['doc2', 'doc5', 'doc1']);
 });
