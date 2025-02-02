@@ -1,3 +1,3 @@
-import half from './src/half.js';
+import search from './src/index.js';
 
-export default half;
+export default search;
