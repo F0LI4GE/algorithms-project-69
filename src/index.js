@@ -1,7 +1,5 @@
-const parseDocumentContent = (document) => document.text.split(' ').map((token) => token.match(/\w+/g)).flat();
-
-export const calculateTF = (document) => {
-  const words = parseDocumentContent(document);
+const calculateTF = (document) => {
+  const words = document.text.split(' ').map((token) => token.match(/\w+/g)).flat();
   const wordCounts = {};
 
   for (let i = 0; i < words.length; i += 1) {
@@ -18,7 +16,7 @@ export const calculateTF = (document) => {
   return termFreqs;
 };
 
-export const calculateIDF = (documents) => {
+const calculateIDF = (documents) => {
   const docCount = documents.length;
   const wordDocCount = {};
 
@@ -37,7 +35,7 @@ export const calculateIDF = (documents) => {
   return idf;
 };
 
-export const invertIndex = (documents) => {
+const invertIndex = (documents) => {
   const index = {};
 
   const IDF = calculateIDF(documents);
@@ -64,24 +62,24 @@ export const invertIndex = (documents) => {
   return index;
 };
 
-export default (documents, phrase) => {
+const search = (documents, phrase) => {
+  const index = invertIndex(documents);
   const ranks = {};
   const parsedTargets = phrase.match(/\w+/g);
 
-  for (let i = 0; i < documents.length; i += 1) {
-    const document = documents[i];
-    const words = document.text.split(' ').map((token) => token.match(/\w+/g)).flat();
-
-    for (let j = 0; j < words.length; j += 1) {
-      if (parsedTargets.includes(words[j])) {
-        if (ranks[document.id]) {
-          ranks[document.id] += 1;
+  parsedTargets.forEach((target) => {
+    if (index[target]) {
+      Object.keys(index[target]).forEach((docId) => {
+        if (ranks[docId]) {
+          ranks[docId] += index[target][docId];
         } else {
-          ranks[document.id] = 1;
+          ranks[docId] = index[target][docId];
         }
-      }
+      });
     }
-  }
+  });
 
   return Object.entries(ranks).sort((e1, e2) => e2[1] - e1[1]).map((entry) => entry[0]);
 };
+
+export default search;
